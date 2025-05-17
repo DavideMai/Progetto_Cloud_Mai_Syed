@@ -1,4 +1,4 @@
-Date,Event,Type
+Date,Event,Type,Country Name, Country Code
 2025-01-04,World Braille Day,['Observance']
 2025-01-24,International Day of Education,['Observance']
 2025-01-26,International Day of Clean Energy,['Observance']
@@ -116,7 +116,7 @@ Date,Event,Type
 2025-06-25,Day of the Seafarer,['Observance']
 2025-06-26,United Nations International Day in Support of Victims of Torture,['Observance']
 2025-06-26,International Day Against Drug Abuse and Illicit Trafficking,['Observance']
-2025-06-27,Micro-, Small and Medium-sized Enterprises Day,['Observance']
+2025-06-27,Micro Small and Medium-sized Enterprises Day,['Observance']
 2025-06-29,International Day of the Tropics,['Observance']
 2025-06-30,International Asteroid Day,['Observance']
 2025-06-30,International Day of Parliamentarism,['Observance']
