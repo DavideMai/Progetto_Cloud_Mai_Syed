@@ -9,7 +9,7 @@ from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
 
-holidays_dataset_path = "s3://tedx-holidays/concatenated.csv"
+holidays_dataset_path = "s3://tedx-holidays/ONU_modified.csv"
 
 args = getResolvedOptions(sys.argv, ['JOB_NAME'])
 
