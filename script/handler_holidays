@@ -1,0 +1,68 @@
+const conn = require('./db');
+const holiday = require('./holidays'); // Assumendo che 'holidays' sia il tuo modello Mongoose
+const mongoose = require('mongoose');
+
+// Lambda handler
+module.exports.handler = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  try {
+    await conn(); // Connessione al database
+
+    let query = {}; // Inizializza un oggetto query vuoto
+
+    // Se vuoi filtrare per data (e poi scegliere un casuale tra quelli della data),
+    // puoi mantenere questa parte per popolare l'oggetto query.
+    // Altrimenti, se vuoi un casuale tra TUTTI i documenti, puoi rimuoverla.
+    if (event.body) {
+      try {
+        const body = JSON.parse(event.body);
+        if (body.Date) {
+          query.Date = body.Date; // Aggiungi il filtro data se presente nel body
+        }
+      } catch (parseError) {
+        console.error('Errore durante il parsing del body dell\'evento:', parseError);
+        return callback(null, {
+          statusCode: 400,
+          headers: { 'Content-Type': 'text/plain' },
+          body: 'JSON non valido nel body della richiesta.'
+        });
+      }
+    }
+
+    // Conta il numero totale di documenti che corrispondono alla query (es. tutti i documenti, o solo quelli di una certa data)
+    const count = await holiday.countDocuments(query);
+
+    if (count === 0) {
+      return callback(null, {
+        statusCode: 404,
+        headers: { 'Content-Type': 'text/plain' },
+        body: 'Nessuna festività trovata per la query specificata.'
+      });
+    }
+
+    // Genera un indice casuale
+    const randomIndex = Math.floor(Math.random() * count);
+
+    // Trova un documento saltando un numero casuale di documenti e prendendo il primo
+    const randomHoliday = await holiday.findOne(query).skip(randomIndex);
+
+    console.log('Festività casuale trovata:', randomHoliday);
+
+    // Restituisci il singolo oggetto trovato
+    return callback(null, {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(randomHoliday)
+    });
+
+  } catch (err) {
+    console.error('Errore durante il recupero della festività:', err);
+    return callback(null, {
+      statusCode: err.statusCode || 500,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Impossibile recuperare la festività.'
+    });
+  }
+};
