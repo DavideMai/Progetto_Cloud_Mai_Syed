@@ -28,9 +28,6 @@ module.exports.get_video_by_date = async (event, context, callback) => {
     // --- Invoke the Get_Holiday_By_Date Lambda function ---
     const lambdaInvokeParams = {
       FunctionName: 'Get_Holiday_By_Date',
-      // It's generally better to pass a specific payload rather than the entire event
-      // unless Get_Holiday_By_Date truly expects the full event structure.
-      // For now, I'm keeping your original approach of passing the event.
       Payload: JSON.stringify(event)
     };
 
@@ -62,65 +59,44 @@ module.exports.get_video_by_date = async (event, context, callback) => {
 
         console.log('Found talks:', talks);
 
-        const videoSimilarities = []; // Array per salvare le relazioni
+        const videoSimilarities = [];
 
         talks.forEach(element => {
-            // Assicurati che element.title esista e sia una stringa
             const videoTitle = element.title || ''; 
-            // Calcola la distanza Jaro (o Jaro-Winkler)
-            // Jaro restituisce 0 per nessuna similarità, 1 per similarità perfetta.
-            // Se holidayName è 'Nome non trovato', la similarità sarà probabilmente bassa.
             const jaroSimilarity = distance.string.jaro(videoTitle, holidayName);
-            
-            // Salva l'ID del video e la similarità in un oggetto
             videoSimilarities.push({
-                videoId: element._id, // Assumendo che l'ID del video sia in `_id`
-                videoTitle: videoTitle, // Puoi salvare anche il titolo per debug/chiarezza
-                holidayName: holidayName, // E il nome della festività
+                videoId: element._id, 
+                videoTitle: videoTitle, 
+                holidayName: holidayName,
                 fullVideoObject: element,
                 similarityScore: jaroSimilarity
             });
         });
 
         videoSimilarities.sort((a, b) => b.similarityScore - a.similarityScore);
-
-        // 2. Prendi i primi 5 video (o meno se ce ne sono meno di 5)
         const top5Videos = videoSimilarities.slice(0, 5);
-
-        // Se vuoi solo gli ID dei 5 video:
         const top5VideoIds = top5Videos.map(video => video.videoId);
-
-        //console.log('Top 5 Videos (full objects):', top5Videos);
-        //console.log('Top 5 Video IDs:', top5VideoIds);
         
-        let randomSelectedVideo = null; // Variabile per salvare l'oggetto video completo casuale
+        let randomSelectedVideo = null;
 
         if (top5Videos.length > 0) {
-            // Genera un indice casuale tra 0 e la lunghezza dell'array - 1
+            
             const randomIndex = Math.floor(Math.random() * top5Videos.length);
-            // Seleziona l'oggetto video completo all'indice casuale
-            randomSelectedVideo = top5Videos[randomIndex].fullVideoObject; // <--- Accedi all'oggetto completo
+            
+            randomSelectedVideo = top5Videos[randomIndex].fullVideoObject; 
         }
-
-        //console.log('Selected Random Video (full object):', randomSelectedVideo);
-
-        // --- Fine delle nuove modifiche ---
         
         let finalResponse = {
-          holidayName: holidayName, // Aggiungi il nome della festività qui
-          selectedVideo: randomSelectedVideo // E il video selezionato
+          holidayName: holidayName,
+          selectedVideo: randomSelectedVideo 
       };
-
-      // Gestisci il caso in cui randomSelectedVideo sia null (nessun video trovato)
+      
       if (randomSelectedVideo === null) {
           finalResponse.message = "Nessun video pertinente trovato o errore nella selezione.";
       }
 
-      //console.log('Final Response Object:', finalResponse);
-      
         return callback(null, {
             statusCode: 200,
-            // Ora restituisci l'oggetto video completo selezionato casualmente
             body: JSON.stringify(finalResponse)
         });
         
