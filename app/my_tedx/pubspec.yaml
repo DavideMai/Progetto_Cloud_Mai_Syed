@@ -1,5 +1,5 @@
 name: my_tedx
-description: "A new Flutter project."
+description: "My TEDX app 2025"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -34,9 +34,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  http: ^1.2.1 # O l'ultima versione stabile
+  http: ^0.13.5
   intl: ^0.19.0 # Utile per formattare le date
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -47,6 +47,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
