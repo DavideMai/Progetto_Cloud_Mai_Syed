@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: AppColors.tedxRed,
           foregroundColor: Colors.white,
           centerTitle: true,
-          titleTextStyle: TextStyle(
+          titleTextStyle: const TextStyle(
             color: Colors.white,
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -44,11 +44,10 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        // AGGIUNTO QUI: Tema per il cursore e la selezione del testo
         textSelectionTheme: TextSelectionThemeData(
-          cursorColor: AppColors.tedxRed, // Colore del cursore
-          selectionColor: AppColors.tedxRed.withOpacity(0.3), // Colore del testo selezionato (con un po' di trasparenza)
-          selectionHandleColor: AppColors.tedxRed, // Colore delle "maniglie" di selezione
+          cursorColor: AppColors.tedxRed,
+          selectionColor: AppColors.tedxRed.withOpacity(0.3),
+          selectionHandleColor: AppColors.tedxRed,
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
@@ -65,7 +64,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  // MODIFICATO QUI: Imposta l'indice iniziale su 1 per la pagina "Video del Giorno"
+  int _selectedIndex = 1; 
 
   late final ApiService _apiService;
 
